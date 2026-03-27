@@ -1,0 +1,137 @@
+Create and Write to a File
+This program uses a Scanner to take input from your keyboard and a FileWriter to save it.
+//Here we can create a file in folder and then save text content in it .
+import java.io.FileWriter;
+import java.util.Scanner;
+
+public class FileWrite {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter text to save:");
+        String data = sc.nextLine();
+
+        try {
+            // Provide the full path here
+            FileWriter writer = new FileWriter("C:/myFolder/test.txt");
+            writer.write(data); // Write the input to the file
+            writer.close();      // Always close to save changes
+            System.out.println("File saved successfully!");
+        } catch (Exception e) {
+            System.out.println("An error occurred.");
+        }
+    }
+}
+
+2 & 3. List Files (Total and Filtered)
+This program demonstrates how to look inside a folder and filter for specific extensions like .pptx.
+//Here we see folder and inside the folder files or related data to files.
+import java.io.File;
+
+public class ListFiles {
+    public static void main(String[] args) {
+        File folder = new File("C:/myFolder");
+        File[] allFiles = folder.listFiles();
+
+        System.out.println("--- All Files ---");
+        for (File f : allFiles) {
+            if (f.isFile()) System.out.println(f.getName());
+        }
+
+        System.out.println("\n--- Only .pptx Files ---");
+        for (File f : allFiles) {
+            // Check if the filename ends with the specific format
+            if (f.isFile() && f.getName().endsWith(".pptx")) {
+                System.out.println(f.getName());
+            }
+        }
+    }
+}
+
+4. Copy File Contents
+The simplest way to do this in modern Java is using Files.copy.
+//Here we copy one file content to other files.
+import java.nio.file.*;
+
+public class CopyFile {
+    public static void main(String[] args) {
+        Path source = Paths.get("source.txt");
+        Path destination = Paths.get("copy.txt");
+
+        try {
+            // StandardCopyOption.REPLACE_EXISTING overwrites if file exists
+            Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("File copied!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+5 & 6. Word Frequency (Single & All Words)
+We use a HashMap to store words as Keys and their counts as Values.
+//Here we check how many time java word appear in our documents 
+import java.util.*;
+import java.io.*;
+
+public class WordCounter {
+    public static void main(String[] args) throws Exception {
+        File file = new File("data.txt");
+        Scanner sc = new Scanner(file);
+        
+        Map<String, Integer> freqMap = new HashMap<>();
+        String target = "java"; // Word to search for specifically
+        int targetCount = 0;
+
+        while (sc.hasNext()) {
+            // Read word, make it lowercase, and remove punctuation
+            String word = sc.next().toLowerCase().replaceAll("[^a-zA-Z]", "");
+
+            // 1. Specific word count (Case-insensitive)
+            if (word.equals(target)) targetCount++;
+
+            // 2. All words frequency
+            freqMap.put(word, freqMap.getOrDefault(word, 0) + 1);
+        }
+
+        System.out.println("Frequency of '" + target + "': " + targetCount);
+        System.out.println("All word counts: " + freqMap);
+        sc.close();
+    }
+}
+
+Singleton Design Pattern
+The goal is to make the Constructor private so no one can use new, and provide a Static method to get the one-and-only instance.
+//Think of it just we are in office with 50 computer but one printer now every one have to interact 
+//with it not every system has its own printer .
+class Singleton {
+    // 1. Create a private static instance of the class
+    private static Singleton instance;
+
+    // 2. Make the constructor private so no one can use 'new'
+    private Singleton() {}
+
+    // 3. Provide a public method to get the instance
+    public static Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton(); // Create only if it doesn't exist
+        }
+        return instance;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Get two references
+        Singleton obj1 = Singleton.getInstance();
+        Singleton obj2 = Singleton.getInstance();
+
+        // Print them to see the memory address (should be identical)
+        System.out.println("Object 1: " + obj1);
+        System.out.println("Object 2: " + obj2);
+
+        // Confirm using == operator
+        if (obj1 == obj2) {
+            System.out.println("Both references point to the SAME object.");
+        }
+    }
+}
