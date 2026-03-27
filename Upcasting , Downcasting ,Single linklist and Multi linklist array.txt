@@ -1,0 +1,118 @@
+//here we see upcasting in java 
+
+class ElectronicDevice {
+    void powerOn() {
+        System.out.println("Device is turning on.");
+    }
+}
+
+class Laptop extends ElectronicDevice {
+    @Override
+    void powerOn() {
+        System.out.println("Laptop is booting up Windows.");
+    }
+}
+
+class Smartphone extends ElectronicDevice {
+    @Override
+    void powerOn() {
+        System.out.println("Smartphone is waking up.");
+    }
+}
+
+public class UpcastingDemo {
+    public static void main(String[] args) {
+        // Upcasting: We treat specific objects as the generic parent type
+        ElectronicDevice dev1 = new Laptop();
+        ElectronicDevice dev2 = new Smartphone();
+
+        // Polymorphism in action: The specific 'powerOn' method is called
+        dev1.powerOn(); 
+        dev2.powerOn();
+    }
+}
+
+
+// here we see downcasting in java 
+
+
+class Employee {
+    String name;
+    Employee(String name) { this.name = name; }
+}
+
+class Manager extends Employee {
+    Manager(String name) { super(name); }
+    
+    void approveBudget() {
+        System.out.println(name + " is approving the budget.");
+    }
+}
+
+public class DowncastingDemo {
+    public static void main(String[] args) {
+        // Upcast to store in a generic array
+        Employee[] staff = { new Employee("Alice"), new Manager("Bob") };
+
+        for (Employee e : staff) {
+            // Downcasting: Check the type before converting
+            if (e instanceof Manager) {
+                Manager mgr = (Manager) e; // Safe explicit cast
+                mgr.approveBudget();
+            } else {
+                System.out.println(e.name + " is not a manager, no budget access.");
+            }
+        }
+    }
+}
+
+
+
+//single linklist aray
+
+
+public class SimpleSinglyList {
+    int[] data = {10, 20, 30};      // Our values
+    int[] next = {1, 2, -1};        // -1 indicates the end of the list
+    int head = 0;                   // Start at index 0 (value 10)
+
+    public void printList() {
+        int current = head;
+        while (current != -1) {
+            System.out.print(data[current] + " -> ");
+            current = next[current]; // Jump to the index stored in 'next'
+        }
+        System.out.println("null");
+    }
+
+    public static void main(String[] args) {
+        new SimpleSinglyList().printList(); // Output: 10 -> 20 -> 30 -> null
+    }
+}
+
+
+
+//  multi linklist array 
+
+public class SimpleMultiList {
+    String[] items = {"Electronics", "Laptops", "Phones"};
+    
+    // Multi-link structure:
+    int[] firstChild = {1, -1, -1};  // Electronics points to Laptops (index 1)
+    int[] nextSibling = {-1, 2, -1}; // Laptops points to Phones (index 2)
+
+    public void printHierarchy() {
+        int parent = 0; // Starting at Electronics
+        System.out.println("Parent: " + items[parent]);
+        
+        int child = firstChild[parent];
+        while (child != -1) {
+            System.out.println(" - Child: " + items[child]);
+            child = nextSibling[child]; // Move to the next sibling
+        }
+    }
+
+    public static void main(String[] args) {
+        new SimpleMultiList().printHierarchy();
+    }
+}
