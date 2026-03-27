@@ -1,0 +1,108 @@
+Task 1: Searching a Sorted ArrayList
+When a list is already sorted, we use Binary Search. It is much faster than checking every single item.
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Task1 Search {
+    public static void main(String[] args) {
+        ArrayList<Integer> numbers = new ArrayList<>();
+        // Adding numbers in sorted order
+        numbers.add(10);
+        numbers.add(20);
+        numbers.add(30);
+        numbers.add(40);
+        numbers.add(50);
+
+        int target = 40;
+
+        // Collections.binarySearch returns the index (position) of the item
+        int index = Collections.binarySearch(numbers, target);
+
+        if (index >= 0) {
+            System.out.println("Item " + target + " found at index: " + index);
+        } else {
+            System.out.println("Item not found.");
+        }
+    }
+}
+
+Task 2: Speed Test (ArrayList vs. LinkedList)
+This program calculates how many nanoseconds it takes to find the very last item. Usually, ArrayList is faster for "getting" an item by index, while LinkedList has to jump from link to link.
+
+import java.util.*;
+
+public class SpeedTest {
+    public static void main(String[] args) {
+        List<Integer> data = Arrays.asList(23, 44, -9, 14, 123, 56, 223, 445, 33, 45, 89, 1, 0, 21, 100);
+
+        ArrayList<Integer> al = new ArrayList<>(data);
+        LinkedList<Integer> ll = new LinkedList<>(data);
+
+        // 1. Test ArrayList
+        long startAL = System.nanoTime();
+        al.contains(100); // Searching for the last item
+        long endAL = System.nanoTime();
+        System.out.println("ArrayList Search Time (ns): " + (endAL - startAL));
+
+        // 2. Test LinkedList
+        long startLL = System.nanoTime();
+        ll.contains(100); // Searching for the last item
+        long endLL = System.nanoTime();
+        System.out.println("LinkedList Search Time (ns): " + (endLL - startLL));
+        
+        System.out.println("Note: Lower time is faster!");
+    }
+}
+
+Task 3: Sorting Students with a Custom Comparator
+Here, we tell Java: "First look at the name. If the names are identical, look at the age."
+import java.util.*;
+
+class Student {
+    int id;
+    String name;
+    int age;
+
+    public Student(int id, String name, int age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+    }
+
+    // This helps us print the student details nicely
+    @Override
+    public String toString() {
+        return "ID: " + id + " | Name: " + name + " | Age: " + age;
+    }
+}
+
+public class StudentSort {
+    public static void main(String[] args) {
+        ArrayList<Student> list = new ArrayList<>();
+        list.add(new Student(1, "Zayn", 20));
+        list.add(new Student(2, "Alice", 22));
+        list.add(new Student(3, "Alice", 19)); // Same name as above, but younger
+        list.add(new Student(4, "Bob", 21));
+
+        // Using a Comparator to define sorting rules
+        Collections.sort(list, new Comparator<Student>() {
+            @Override
+            public int compare(Student s1, Student s2) {
+                // First: Compare by name
+                int nameCompare = s1.name.compareTo(s2.name);
+                
+                if (nameCompare != 0) {
+                    return nameCompare; // If names are different, sort by name
+                } else {
+                    // Second: If names are same, compare by age
+                    return Integer.compare(s1.age, s2.age);
+                }
+            }
+        });
+
+        // Print the sorted results
+        for (Student s : list) {
+            System.out.println(s);
+        }
+    }
+}
