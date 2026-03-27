@@ -1,0 +1,62 @@
+Multi-Threading
+
+"1. Write a program in java that creates 3 Threads i.e Main, Thread1 and Thread2.
+Print execution countdown messages for Thread 1 and Thread 2, also make Thread 1 and Thread 2 sleep for 1 second.
+Finally Main thread should end it's execution after Thread2 and Thread1 finish their execution.
+Limitations: You can not use the ""sleep()"" method for the ""main"" thread."
+
+//here we go 
+
+// We "extend Thread" to give this class the ability to run as a separate thread
+class CountDownThread extends Thread {
+    private String name;
+
+    public CountDownThread(String name) {
+        this.name = name;
+    }
+
+    // The run() method contains the code that Thread 1 and Thread 2 will execute
+    @Override
+    public void run() {
+        try {
+            for (int i = 3; i > 0; i--) {
+                System.out.println(name + " countdown: " + i);
+                
+                // Requirement: Make Thread 1 and 2 sleep for 1 second (1000ms)
+                Thread.sleep(1000);
+            }
+            System.out.println(name + " has finished its work.");
+        } catch (InterruptedException e) {
+            System.out.println(name + " was interrupted.");
+        }
+    }
+}
+
+public class MainThreadControl {
+    // This is the "Main" thread (Thread #3)
+    public static void main(String[] args) {
+        System.out.println("Main thread starting...");
+
+        // 1. Create Thread 1 and Thread 2
+        CountDownThread thread1 = new CountDownThread("Thread 1");
+        CountDownThread thread2 = new CountDownThread("Thread 2");
+
+        // 2. Start both threads (this calls their run() methods)
+        thread1.start();
+        thread2.start();
+
+        try {
+            /* 3. Requirement: Main must wait for others without using sleep().
+               We use join(). This tells the Main thread: 
+               "Stop here and wait until these threads are totally done."
+            */
+            thread1.join(); 
+            thread2.join();
+        } catch (InterruptedException e) {
+            System.out.println("Main thread was interrupted.");
+        }
+
+        // 4. This only prints AFTER Thread 1 and 2 are finished
+        System.out.println("All threads finished. Main thread ending execution now.");
+    }
+}
