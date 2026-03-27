@@ -1,0 +1,130 @@
+String Literal vs. String Object
+
+public class StringDifference {
+    public static void main(String[] args) {
+        // String Literal (stored in String Pool)
+        String s1 = "Hello";
+        String s2 = "Hello"; 
+
+        // String Object (stored in Heap memory)
+        String s3 = new String("Hello");
+
+        System.out.println("--- Using == (Compares Memory Address) ---");
+        System.out.println("s1 == s2: " + (s1 == s2)); // true (same place in pool)
+        System.out.println("s1 == s3: " + (s1 == s3)); // false (different locations)
+
+        System.out.println("\n--- Using .equals() (Compares Content) ---");
+        System.out.println("s1.equals(s3): " + s1.equals(s3)); // true (both say "Hello")
+    }
+}
+
+
+
+Compare Strings with compareTo()
+
+
+public class CompareStrings {
+    public static void main(String[] args) {
+        String a = "Apple";
+        String b = "Banana";
+
+        int result = a.compareTo(b);
+
+        if (result == 0) {
+            System.out.println("Strings are equal");
+        } else if (result < 0) {
+            System.out.println("Apple comes before Banana");
+        } else {
+            System.out.println("Apple comes after Banana");
+        }
+    }
+}
+
+
+. StringBuffer vs. StringBuilder Performance
+
+
+
+public class StringSpeedTest {
+    public static void main(String[] args) {
+        String text = "Java is an Object Oriented Language";
+        int loops = 10000000; // 10 million times
+
+        // Test StringBuffer
+        StringBuffer sBuffer = new StringBuffer(text);
+        long start1 = System.currentTimeMillis();
+        for (int i = 0; i < loops; i++) {
+            char c = sBuffer.charAt(5); // Traversal action
+        }
+        long end1 = System.currentTimeMillis();
+        System.out.println("StringBuffer Time: " + (end1 - start1) + "ms");
+
+        // Test StringBuilder
+        StringBuilder sBuilder = new StringBuilder(text);
+        long start2 = System.currentTimeMillis();
+        for (int i = 0; i < loops; i++) {
+            char c = sBuilder.charAt(5); // Traversal action
+        }
+        long end2 = System.currentTimeMillis();
+        System.out.println("StringBuilder Time: " + (end2 - start2) + "ms");
+        
+        System.out.println("Observation: StringBuilder is generally faster.");
+    }
+}
+
+
+
+Capitalize Each Word
+
+
+public class CapitalizeWords {
+    public static void main(String[] args) {
+        String input = "java is an object oriented language";
+        String[] words = input.split(" ");
+        String result = "";
+
+        for (String w : words) {
+            String first = w.substring(0, 1).toUpperCase(); // Get 1st letter
+            String rest = w.substring(1);                   // Get rest of word
+            result += first + rest + " ";                   // Combine
+        }
+
+        System.out.println("Original: " + input);
+        System.out.println("Result: " + result.trim());
+    }
+}
+
+
+
+Count Prime Numbers
+
+
+import java.util.Scanner;
+
+public class CountPrimes {
+    // Helper: Checks if one number is prime
+    public static boolean isPrime(int n) {
+        if (n <= 1) return false;
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) return false;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter a number: ");
+        int limit = sc.nextInt();
+        int count = 0;
+
+        for (int i = 2; i < limit; i++) {
+            if (isPrime(i)) {
+                count++;
+            }
+        }
+
+        System.out.println("Count of primes less than " + limit + " is: " + count);
+    }
+}
+
+
