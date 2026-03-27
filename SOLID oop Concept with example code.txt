@@ -1,0 +1,139 @@
+1. Single Responsibility Principle (SRP)
+The Problem: Mixing "Payment Logic" with "Receipt Generation." If you change the receipt format, you shouldn't have to touch the payment code.
+
+// here we see how to  handles only payment processing
+
+class PaymentProcessor {
+    public void processPayment(double amount) {
+        System.out.println("Processing payment of $" + amount);
+    }
+}
+
+// Handles only receipt generation
+class ReceiptGenerator {
+    public void printReceipt(double amount) {
+        System.out.println("Receipt: Paid $" + amount);
+    }
+}
+
+2. Open/Closed Principle (OCP)
+The Problem: If you hardcode every payment type (if/else for CreditCard, PayPal, Crypto), you have to modify the class every time you add a new one.
+
+// here we check how to Open for extension, Closed for modification
+
+interface PaymentMethod {
+    void pay(double amount);
+}
+
+class CreditCardPayment implements PaymentMethod {
+    public void pay(double amount) { System.out.println("Paid with Credit Card"); }
+}
+
+class PayPalPayment implements PaymentMethod {
+    public void pay(double amount) { System.out.println("Paid with PayPal"); }
+}
+
+// This class doesn't need to change when a new payment method is added!
+class Checkout {
+    public void execute(PaymentMethod method, double amount) {
+        method.pay(amount);
+    }
+}
+
+3. Liskov Substitution Principle (LSP)
+The Problem: You have a DebitCard that works for all payments, but a GiftCard that cannot be used for international payments. If a method expects a DebitCard but receives a GiftCard, it might crash.
+interface Payment {
+    void process(double amount);
+}
+
+class CreditCard implements Payment {
+    public void process(double amount) { /* Logic */ }
+}
+
+// If GiftCard cannot perform international payments, 
+// don't inherit it from a class that guarantees international support.
+class GiftCard implements Payment {
+    public void process(double amount) {
+        // GiftCard only works for local purchases
+        System.out.println("Processing local gift card payment.");
+    }
+}
+4. Interface Segregation Principle (ISP)
+Goal: Clients should not be forced to depend on methods they don’t use.
+The Problem: If you have one giant Machine interface, a simple printer is forced to implement scan() and fax() methods it cannot perform.
+
+//let see Segregated interfaces
+interface Printer {
+    void print(String document);
+}
+
+interface Scanner {
+    void scan(String document);
+}
+
+interface FaxMachine {
+    void fax(String document);
+}
+
+// A simple machine only implements what it actually does
+class SimplePrinter implements Printer {
+    @Override
+    public void print(String document) {
+        System.out.println("Printing: " + document);
+    }
+}
+
+// A high-end machine implements all capabilities
+class AllInOneMachine implements Printer, Scanner, FaxMachine {
+    @Override
+    public void print(String document) { /*...*/ }
+    @Override
+    public void scan(String document) { /*...*/ }
+    @Override
+    public void fax(String document) { /*...*/ }
+}
+
+5. Dependency Inversion Principle (DIP)
+Goal: High-level modules (the business logic) should not depend on low-level modules (the hardware drivers); both should depend on abstractions.
+The Problem: If your DocumentManager directly creates a CanonPrinter object, your software is permanently tied to Canon.
+
+// 1. The Abstraction
+interface PrinterDevice {
+    void printDocument(String content);
+}
+
+// 2. Low-level Modules (Concrete implementations)
+class HPPrinter implements PrinterDevice {
+    public void printDocument(String content) {
+        System.out.println("HP Printing: " + content);
+    }
+}
+
+class CanonPrinter implements PrinterDevice {
+    public void printDocument(String content) {
+        System.out.println("Canon Printing: " + content);
+    }
+}
+
+// 3. High-level Module (Business Logic)
+class DocumentManager {
+    private final PrinterDevice printer;
+
+    // We inject the dependency, not create it
+    public DocumentManager(PrinterDevice printer) {
+        this.printer = printer;
+    }
+
+    public void process(String content) {
+        printer.printDocument(content);
+    }
+}
+
+// Usage
+public class Office {
+    public static void main(String[] args) {
+        // We can swap HP for Canon without touching DocumentManager
+        DocumentManager manager = new DocumentManager(new CanonPrinter());
+        manager.process("Project Proposal");
+    }
+}
