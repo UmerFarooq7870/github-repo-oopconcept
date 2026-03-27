@@ -1,0 +1,35 @@
+// 1. Ek apni "Bimari" (Exception) banayi jo Exception class se milti julti hai
+class NullStringException extends Exception {
+    public NullStringException(String message) {
+        // Yeh message parent class (Exception) ko bhej deta hai
+        super(message);
+    }
+}
+
+class CustomExceptionDemo {
+
+    // 2. Is method ke saath 'throws' likha hai, matlab yeh pehle se warn kar raha hai ke "Yahan ghalti ho sakti hai"
+    public static void checkString(String text) throws NullStringException {
+        if (text == null) {
+            // Agar text khali (null) hai, toh 'throw' ka matlab hai "Alarm baja do!"
+            throw new NullStringException("Ghalti: Input string khali hai!");
+        } else {
+            System.out.println("String sahi hai: " + text);
+        }
+    }
+
+    public static void main(String[] args) {
+        String myData = null; // Test karne ke liye data ko null rakha hai
+
+        try {
+            // 3. 'try' ka matlab: "Yeh kaam karne ki koshish karo"
+            checkString(myData);
+        } catch (NullStringException e) {
+            // 4. 'catch' ka matlab: "Agar Alarm baja (Exception ayi), toh use yahan handle karo"
+            System.out.println("Exception pakri gayi: " + e.getMessage());
+        } finally {
+            // 5. 'finally' ka matlab: "Kuch bhi ho jaye, yeh hissa zaroor chalega"
+            System.out.println("Program khatam ho gaya.");
+        }
+    }
+}
