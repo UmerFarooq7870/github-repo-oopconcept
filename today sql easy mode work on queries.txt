@@ -1,0 +1,130 @@
+Date 26/03/2026     Day Thursday
+
+SELECT * FROM patients
+
+
+Male Patients: Show the first name, last name, and gender of all patients who are male ('M').
+
+Missing Allergies: Show the first name and last name of patients who have no allergies (where the value is NULL).
+
+Names starting with 'C': Show the first name of patients whose names begin with the letter 'C'.
+
+Weight Range: Show the first name and last name of patients whose weight is between 100 and 120 (inclusive).
+
+Physical Criteria: Find the first name, last name, and birth date of patients who are taller than 160 and weigh more than 70.
+
+Specific City & Allergies: Show the first name, last name, and allergies for patients living in the city of 'Hamilton' who actually have allergies listed.
+
+Updating Data
+Handle NULL Allergies: Update the patients table to replace all NULL allergy records with the string 'NKA' (No Known Allergies).
+
+Formatting & Joining Tables
+Full Name Construction: Show the first name and last name concatenated into a single column named full_name.
+
+Patient Provinces: Show the first name, last name, and the full name of the province for every patient by joining the patients and province_names tables.
+
+Aggregates & Calculations
+Birth Year Count: Count how many total patients were born in the year 2010.
+
+Tallest Patient: Show the first name, last name, and height of the single tallest patient in the database.
+
+Specific ID Search: Show all columns for patients who have the following IDs: 1, 45, 534, 879, or 1000.
+
+Unique Locations: Based on the cities patients live in, show a unique list of cities located in the province 'NS' (Nova Scotia).
+
+Admissions Table Queries
+Grand Total: Show the total number of admissions recorded in the admissions table.
+
+Same-Day Visits: Show all columns from the admissions table where the patient was admitted and discharged on the exact same day.
+
+Individual Visit Count: Show the patient ID and the total number of times patient #579 has been admitted to the hospital.
+
+
+select first_name,last_name,gender from patients where gender='M';
+select first_name ,last_name from patients where allergies is n;
+select first_name from patients where first_name LIKE 'C%' ;
+
+select first_name , last_name from patients where weight  between 100 and 120
+UPDATE patients
+SET allergies = 'NKA'
+WHERE allergies IS NULL;
+
+SELECT 
+  first_name || ' ' || last_name AS full_name
+FROM patients;
+
+
+
+SELECT
+  patients.first_name,
+  patients.last_name,
+  province_names.province_name
+FROM patients
+JOIN province_names
+  ON patients.province_id = province_names.province_id;
+
+SELECT 
+  COUNT(*) AS total_patients
+FROM patients
+WHERE 
+  birth_date LIKE '2010%';
+  
+  
+  SELECT
+  first_name,
+  last_name,
+  height
+FROM patients
+WHERE
+  height = (SELECT MAX(height) FROM patients);
+
+SELECT
+  *
+FROM patients
+WHERE
+  patient_id IN (1, 45, 534, 879, 1000);
+
+
+
+SELECT
+  COUNT(*) AS total_admissions
+FROM admissions;
+select *from  admissions where admission_date=discharge_date
+SELECT
+  patient_id,
+  COUNT(*) AS total_admissions
+FROM admissions
+WHERE
+  patient_id = 579;
+ 
+ 
+ //Based on the cities that our patients live in, show unique cities that are in province_id 'NS'.
+SELECT DISTINCT
+  city
+FROM patients
+WHERE
+  province_id = 'NS';
+  
+  
+  
+  
+ SELECT
+  first_name,
+  last_name,
+  birth_date
+FROM patients
+WHERE
+  height > 160 
+  AND weight > 70;
+
+
+
+SELECT
+  first_name,
+  last_name,
+  allergies
+FROM patients
+WHERE
+  allergies IS NOT NULL
+  AND city = 'Hamilton';
+
